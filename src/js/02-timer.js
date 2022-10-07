@@ -31,12 +31,11 @@ start.addEventListener('click', onStartButtonClick);
 function onStartButtonClick() {
   const id = setInterval(() => {
     const currentDate = new Date();
-    // if (currentDate === dataPickr.selectedDates[0]) {
-    //   clearInterval(id);
-    //   return;
-    // }
-    let result = dataPickr.selectedDates[0].getTime() - currentDate.getTime();
 
+    let result = dataPickr.selectedDates[0].getTime() - currentDate.getTime();
+    if (result < 1000) {
+      clearInterval(id);
+    }
     let leftTime = convertMs(result);
     daysEl.textContent = addLeadingZero(leftTime.days);
     hoursEl.textContent = addLeadingZero(leftTime.hours);
