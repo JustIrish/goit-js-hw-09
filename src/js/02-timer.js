@@ -35,6 +35,7 @@ function onStartButtonClick() {
     let result = dataPickr.selectedDates[0].getTime() - currentDate.getTime();
     if (result < 1000) {
       clearInterval(id);
+      start.disabled = true;
     }
     let leftTime = convertMs(result);
     daysEl.textContent = addLeadingZero(leftTime.days);
