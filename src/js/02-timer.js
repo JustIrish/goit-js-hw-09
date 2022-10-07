@@ -1,10 +1,11 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const daysEl = document.querySelector('span[data-days]');
 const hoursEl = document.querySelector('span[data-hours]');
 const minutesEl = document.querySelector('span[data-minutes]');
-const SecondsEl = document.querySelector('span[data-seconds]');
+const secondsEl = document.querySelector('span[data-seconds]');
 const start = document.querySelector('button[data-start]');
 start.disabled = true;
 
@@ -15,7 +16,7 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     if (selectedDates[0].getTime() <= Date.now()) {
-      alert('Please choose a date in the future');
+      Notify.failure('Please choose a date in the future');
     } else {
       start.disabled = false;
       console.log(selectedDates[0]);
@@ -28,14 +29,19 @@ const dataPickr = new flatpickr('#datetime-picker', options);
 start.addEventListener('click', onStartButtonClick);
 
 function onStartButtonClick() {
-  setInterval(() => {
+  const id = setInterval(() => {
     const currentDate = new Date();
+    // if (currentDate === dataPickr.selectedDates[0]) {
+    //   clearInterval(id);
+    //   return;
+    // }
     let result = dataPickr.selectedDates[0].getTime() - currentDate.getTime();
-    let lefTime = convertMs(result);
-    daysEl.textContent = lefTime.days;
-    hoursEl.textContent = lefTime.hours;
-    minutesEl.textContent = lefTime.minutes;
-    SecondsEl.textContent = lefTime.seconds;
+
+    let leftTime = convertMs(result);
+    daysEl.textContent = addLeadingZero(leftTime.days);
+    hoursEl.textContent = addLeadingZero(leftTime.hours);
+    minutesEl.textContent = addLeadingZero(leftTime.minutes);
+    secondsEl.textContent = addLeadingZero(leftTime.seconds);
   }, 1000);
 }
 
@@ -56,4 +62,8 @@ function convertMs(ms) {
   const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
   return { days, hours, minutes, seconds };
+}
+
+function addLeadingZero(value) {
+  return value.toString().padStart(2, '0');
 }
