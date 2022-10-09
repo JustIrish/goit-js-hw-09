@@ -17,6 +17,7 @@ const options = {
   onClose(selectedDates) {
     if (selectedDates[0].getTime() <= Date.now()) {
       Notify.failure('Please choose a date in the future');
+      start.disabled = true;
     } else {
       start.disabled = false;
       console.log(selectedDates[0]);
